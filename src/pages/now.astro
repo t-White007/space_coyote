@@ -1,0 +1,75 @@
+---
+import Base from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+
+const updated = 'May 2026';
+---
+
+<Base title="Now" description="What Tyler is doing right now.">
+  <Nav />
+  <main>
+    <div class="container">
+      <header class="page-header">
+        <h1>Now</h1>
+        <p class="mono faint" style="font-size: 0.75rem; margin-top: 0.5rem;">
+          Updated {updated} — <a href="https://nownownow.com/about" target="_blank" rel="noopener">what is this?</a>
+        </p>
+      </header>
+
+      <div class="prose now-body">
+        <h2>Making</h2>
+        <p>
+          Building <strong>cirrus</strong>, a CLI tool for AI-coached essay revision.
+          Multi-component architecture: Diagnoser, Eval-generator, Writer, Evaluator,
+          Structural Briefer. The dependency graph pre-flight step is the interesting part.
+        </p>
+        <p>
+          Also building this site — treating it as a slow, ongoing design project
+          rather than something to "launch."
+        </p>
+
+        <h2>Music</h2>
+        <p>
+          Deep in Latin and South American electronics. Working through
+          the distinctions between folk-as-generator vs. folk-as-quotation —
+          when a tradition becomes source material versus when it stays structural.
+        </p>
+        <p>
+          Upcoming: Flying Lotus Layer³ at The Powerstation, Auckland.
+        </p>
+
+        <h2>Body</h2>
+        <p>
+          Training for the Queenstown Marathon, November 2026.
+          Gym Mondays/Wednesdays, run clubs Thursdays/Fridays, long runs Saturdays.
+          Interested in plyometrics for running economy.
+        </p>
+
+        <h2>Reading</h2>
+        <p>
+          — add current reads here —
+        </p>
+      </div>
+    </div>
+  </main>
+  <Footer />
+</Base>
+
+<style>
+  .page-header {
+    padding: clamp(2.5rem, 6vw, 5rem) 0 2rem;
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 3rem;
+  }
+
+  .page-header h1 {
+    font-size: clamp(2rem, 5vw, 3rem);
+    margin-bottom: 0.25rem;
+  }
+
+  .now-body {
+    max-width: var(--measure);
+    padding-bottom: 4rem;
+  }
+</style>

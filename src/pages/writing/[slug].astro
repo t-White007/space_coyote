@@ -1,0 +1,121 @@
+---
+import Base from '../../layouts/Base.astro';
+import Nav from '../../components/Nav.astro';
+import Footer from '../../components/Footer.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('writing', ({ data }) => !data.draft);
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+
+function formatDate(date: Date) {
+  return date.toLocaleDateString('en-NZ', {
+    year: 'numeric', month: 'long', day: 'numeric'
+  });
+}
+---
+
+<Base title={post.data.title} description={post.data.description}>
+  <Nav />
+  <main>
+    <div class="container">
+      <article>
+        <header class="post-header">
+          <div class="post-meta">
+            <time class="mono faint" datetime={post.data.date.toISOString()}>
+              {formatDate(post.data.date)}
+            </time>
+            {post.data.tags.length > 0 && (
+              <div class="tags">
+                {post.data.tags.map(tag => (
+                  <span class="tag mono">{tag}</span>
+                ))}
+              </div>
+            )}
+          </div>
+          <h1 class="post-title">{post.data.title}</h1>
+          {post.data.description && (
+            <p class="post-desc">{post.data.description}</p>
+          )}
+        </header>
+
+        <div class="prose post-body">
+          <Content />
+        </div>
+      </article>
+
+      <nav class="post-nav">
+        <a href="/writing" class="mono">← all writing</a>
+      </nav>
+    </div>
+  </main>
+  <Footer />
+</Base>
+
+<style>
+  .post-header {
+    padding: clamp(2.5rem, 6vw, 5rem) 0 2.5rem;
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 3rem;
+    max-width: var(--measure);
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 1.25rem;
+    font-size: 0.8rem;
+  }
+
+  .tags {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .tag {
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+    padding: 0.15em 0.5em;
+    border: 1px solid var(--rule);
+    color: var(--ink-faint);
+  }
+
+  .post-title {
+    font-size: clamp(1.75rem, 4vw, 2.75rem);
+    margin-bottom: 1rem;
+    max-width: var(--measure);
+  }
+
+  .post-desc {
+    font-size: 1.05rem;
+    color: var(--ink-faint);
+    font-style: italic;
+    max-width: var(--measure);
+  }
+
+  .post-body {
+    margin-bottom: 4rem;
+  }
+
+  .post-nav {
+    padding: 2rem 0;
+    border-top: 1px solid var(--rule);
+  }
+
+  .post-nav a {
+    font-size: 0.85rem;
+    text-decoration: none;
+    color: var(--ink-faint);
+  }
+
+  .post-nav a:hover { color: var(--ink); }
+</style>

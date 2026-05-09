@@ -1,0 +1,357 @@
+---
+import Base from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import { getCollection } from 'astro:content';
+
+const writing = (await getCollection('writing', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 3);
+
+const projects = (await getCollection('projects'))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 3);
+
+function formatDate(date: Date) {
+  return date.toLocaleDateString('en-NZ', { year: 'numeric', month: 'short' });
+}
+---
+
+<Base title="Home">
+  <Nav />
+
+  <main>
+    <!-- ── HERO ── -->
+    <section class="hero container">
+      <div class="hero-text">
+        <p class="hero-label mono faint">Auckland, NZ</p>
+        <h1 class="hero-name">Tyler<br /><span class="hero-name-ghost">Kuhn</span></h1>
+        <div class="hero-desc">
+          <p>
+            Founder, DJ, writer. Building an AI-native media entity where
+            the tooling is the product. Publishing a music newsletter about
+            how form carries meaning across time.
+          </p>
+          <p class="faint" style="font-size: 0.9rem; margin-top: 1rem;">
+            This is a working space — notes, drafts, tools, and finished things,
+            accumulating in public over time.
+          </p>
+        </div>
+      </div>
+
+      <div class="hero-ticker">
+        <div class="ticker-item">
+          <span class="mono faint ticker-label">currently</span>
+          <span>Training for Queenstown Marathon — Nov 2026</span>
+        </div>
+        <div class="ticker-item">
+          <span class="mono faint ticker-label">listening</span>
+          <span>Latin & South American electronics</span>
+        </div>
+        <div class="ticker-item">
+          <span class="mono faint ticker-label">building</span>
+          <span>cirrus — AI-coached essay revision CLI</span>
+        </div>
+      </div>
+    </section>
+
+    <hr class="rule container-rule" />
+
+    <!-- ── WRITING ── -->
+    <section class="section container">
+      <div class="section-header">
+        <h2 class="section-title">Writing</h2>
+        <a href="/writing" class="section-more mono">all essays →</a>
+      </div>
+
+      {writing.length > 0 ? (
+        <ul class="entry-list">
+          {writing.map((post) => (
+            <li class="entry">
+              <a href={`/writing/${post.slug}`} class="entry-link">
+                <span class="entry-title">{post.data.title}</span>
+                <span class="entry-meta mono faint">{formatDate(post.data.date)}</span>
+              </a>
+              {post.data.description && (
+                <p class="entry-desc faint">{post.data.description}</p>
+              )}
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p class="faint mono" style="font-size: 0.85rem;">— forthcoming —</p>
+      )}
+    </section>
+
+    <hr class="rule container-rule" />
+
+    <!-- ── PROJECTS ── -->
+    <section class="section container">
+      <div class="section-header">
+        <h2 class="section-title">Projects</h2>
+        <a href="/projects" class="section-more mono">all projects →</a>
+      </div>
+
+      {projects.length > 0 ? (
+        <ul class="entry-list">
+          {projects.map((project) => (
+            <li class="entry">
+              <a
+                href={project.data.url ?? `/projects/${project.slug}`}
+                class="entry-link"
+                target={project.data.url ? '_blank' : undefined}
+                rel={project.data.url ? 'noopener' : undefined}
+              >
+                <span class="entry-title">{project.data.title}</span>
+                <span class:list={['entry-status mono', project.data.status]}>
+                  {project.data.status}
+                </span>
+              </a>
+              <p class="entry-desc faint">{project.data.description}</p>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p class="faint mono" style="font-size: 0.85rem;">— forthcoming —</p>
+      )}
+    </section>
+
+    <hr class="rule container-rule" />
+
+    <!-- ── NOW / ABOUT ── -->
+    <section class="section section-about container">
+      <div class="about-grid">
+        <div class="about-col">
+          <h2 class="section-title">About</h2>
+          <p>
+            Auckland-based. Arts and engineering background. Former Kami.
+            I run a DJ night at Re:union (vinyl-focused, soft-clubbing).
+            My music practice is structured around genealogical thinking —
+            tracing how forms mutate, migrate, and mean.
+          </p>
+          <p>
+            The startup thesis: an AI-native media entity where the editorial
+            work is proof-of-concept, and the tooling required to run it solo
+            becomes the product.
+          </p>
+        </div>
+        <div class="about-col">
+          <h2 class="section-title">Now</h2>
+          <ul class="now-list mono">
+            <li><span class="faint">→</span> Music curriculum: Latin/SA electronics</li>
+            <li><span class="faint">→</span> Building <em>cirrus</em> (essay revision CLI)</li>
+            <li><span class="faint">→</span> Marathon training, Queenstown Nov 2026</li>
+            <li><span class="faint">→</span> <a href="/now">full /now page</a></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  /* ── Hero ── */
+  .hero {
+    padding-top: clamp(3rem, 8vw, 6rem);
+    padding-bottom: clamp(2rem, 5vw, 4rem);
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 3rem;
+    align-items: start;
+  }
+
+  @media (max-width: 680px) {
+    .hero { grid-template-columns: 1fr; }
+  }
+
+  .hero-label {
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+  }
+
+  .hero-name {
+    font-size: clamp(3.5rem, 10vw, 7rem);
+    font-family: var(--font-mono);
+    font-weight: 500;
+    line-height: 0.9;
+    letter-spacing: -0.04em;
+    margin-bottom: 2rem;
+  }
+
+  .hero-name-ghost {
+    color: var(--ink-ghost);
+  }
+
+  .hero-desc p {
+    max-width: 52ch;
+  }
+
+  .hero-ticker {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    padding-top: 0.5rem;
+    min-width: 220px;
+    max-width: 280px;
+    border-left: 2px solid var(--rule);
+    padding-left: 1.5rem;
+  }
+
+  @media (max-width: 680px) {
+    .hero-ticker {
+      border-left: none;
+      border-top: 1px solid var(--rule);
+      padding-left: 0;
+      padding-top: 1.5rem;
+      max-width: 100%;
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+  }
+
+  .ticker-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .ticker-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .ticker-item > span:last-child {
+    font-size: 0.8rem;
+    line-height: 1.35;
+  }
+
+  /* ── Rules ── */
+  .container-rule {
+    max-width: 1100px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: var(--gap);
+    padding-right: var(--gap);
+    border: none;
+    border-top: 1px solid var(--rule);
+  }
+
+  /* ── Sections ── */
+  .section {
+    padding: clamp(2rem, 5vw, 3.5rem) 0;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 1.75rem;
+    gap: 1rem;
+  }
+
+  .section-title {
+    font-size: 0.75rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .section-more {
+    font-size: 0.75rem;
+    text-decoration: none;
+    color: var(--ink-faint);
+    letter-spacing: 0.04em;
+    transition: color 0.15s;
+  }
+
+  .section-more:hover { color: var(--accent); }
+
+  /* ── Entry list ── */
+  .entry-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .entry {
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .entry:first-child { border-top: 1px solid var(--rule); }
+
+  .entry-link {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    text-decoration: none;
+  }
+
+  .entry-link:hover .entry-title { color: var(--accent); }
+
+  .entry-title {
+    font-family: var(--font-serif);
+    font-size: 1rem;
+    transition: color 0.15s;
+  }
+
+  .entry-meta {
+    font-size: 0.75rem;
+    flex-shrink: 0;
+  }
+
+  .entry-desc {
+    font-size: 0.875rem;
+    margin-top: 0.35rem;
+    max-width: 60ch;
+  }
+
+  .entry-status {
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    flex-shrink: 0;
+  }
+
+  .entry-status.active { color: var(--accent); }
+  .entry-status.shipped { color: var(--accent-cool); }
+  .entry-status.archived { color: var(--ink-ghost); }
+
+  /* ── About grid ── */
+  .section-about {
+    padding-bottom: clamp(3rem, 8vw, 6rem);
+  }
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+  }
+
+  @media (max-width: 680px) {
+    .about-grid { grid-template-columns: 1fr; gap: 2rem; }
+  }
+
+  .about-col > * + * { margin-top: 1em; }
+
+  .about-col p {
+    font-size: 0.9rem;
+    max-width: 44ch;
+  }
+
+  .now-list {
+    list-style: none;
+    font-size: 0.8rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+</style>

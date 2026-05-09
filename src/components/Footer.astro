@@ -1,0 +1,48 @@
+---
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-inner">
+      <span class="mono faint" style="font-size: 0.75rem;">
+        © {year} — built with Astro, written in Obsidian, deployed on Netlify
+      </span>
+      <div class="footer-links">
+        <a href="https://twitter.com/" class="mono" target="_blank" rel="noopener">twitter</a>
+        <a href="https://github.com/" class="mono" target="_blank" rel="noopener">github</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    margin-top: 6rem;
+    padding: 2rem 0;
+    border-top: 1px solid var(--rule);
+  }
+
+  .footer-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 1.5rem;
+  }
+
+  .footer-links a {
+    font-size: 0.75rem;
+    text-decoration: none;
+    color: var(--ink-faint);
+  }
+
+  .footer-links a:hover {
+    color: var(--ink);
+  }
+</style>

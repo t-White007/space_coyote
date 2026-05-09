@@ -1,0 +1,116 @@
+/* ─────────────────────────────────────────────────
+   TYLER'S SITE — global styles
+   Aesthetic: raw, hand-crafted, typographic weight
+   ───────────────────────────────────────────────── */
+
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap');
+
+/* ── Tokens ── */
+:root {
+  --paper: #f4f0e8;
+  --ink: #1a1714;
+  --ink-faint: #6b6560;
+  --ink-ghost: #c4bfb8;
+  --accent: #c8410a;          /* burnt orange — like vinyl labels */
+  --accent-cool: #2a4a6b;     /* deep navy */
+  --rule: #d6d0c6;
+
+  --font-serif: 'Libre Baskerville', Georgia, serif;
+  --font-mono: 'IBM Plex Mono', 'Courier New', monospace;
+
+  --measure: 68ch;
+  --gap: clamp(1.5rem, 4vw, 3rem);
+  --gap-sm: clamp(0.75rem, 2vw, 1.25rem);
+}
+
+/* ── Reset ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  line-height: 1.7;
+  min-height: 100vh;
+}
+
+/* ── Typography ── */
+h1, h2, h3, h4 {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+h1 { font-size: clamp(2rem, 5vw, 3.5rem); }
+h2 { font-size: clamp(1.25rem, 3vw, 1.75rem); }
+h3 { font-size: 1.1rem; }
+
+p { max-width: var(--measure); }
+
+a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-underline-offset: 3px;
+  transition: color 0.15s ease;
+}
+
+a:hover { color: var(--accent); }
+
+code, pre {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+}
+
+pre {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 1.25rem;
+  overflow-x: auto;
+  border-radius: 2px;
+}
+
+/* ── Utilities ── */
+.mono { font-family: var(--font-mono); }
+.faint { color: var(--ink-faint); }
+.ghost { color: var(--ink-ghost); }
+.accent { color: var(--accent); }
+
+.rule {
+  border: none;
+  border-top: 1px solid var(--rule);
+  margin: var(--gap) 0;
+}
+
+/* ── Layout ── */
+.container {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 var(--gap);
+}
+
+.prose {
+  max-width: var(--measure);
+}
+
+.prose > * + * { margin-top: 1.25em; }
+
+.prose h2, .prose h3 {
+  margin-top: 2.5em;
+  margin-bottom: 0.5em;
+}
+
+/* ── Selection ── */
+::selection {
+  background: var(--accent);
+  color: var(--paper);
+}

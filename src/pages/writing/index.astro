@@ -1,0 +1,114 @@
+---
+import Base from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('writing', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+function formatDate(date: Date) {
+  return date.toLocaleDateString('en-NZ', { year: 'numeric', month: 'short', day: 'numeric' });
+}
+
+// Group by year
+const byYear = posts.reduce((acc, post) => {
+  const year = post.data.date.getFullYear().toString();
+  if (!acc[year]) acc[year] = [];
+  acc[year].push(post);
+  return acc;
+}, {} as Record<string, typeof posts>);
+
+const years = Object.keys(byYear).sort((a, b) => Number(b) - Number(a));
+---
+
+<Base title="Writing">
+  <Nav />
+  <main>
+    <div class="container">
+      <header class="page-header">
+        <h1>Writing</h1>
+        <p class="faint">Essays, long reads, and newsletter pieces.</p>
+      </header>
+
+      {years.length > 0 ? (
+        years.map((year) => (
+          <section class="year-section">
+            <h2 class="year-label mono faint">{year}</h2>
+            <ul class="entry-list">
+              {byYear[year].map((post) => (
+                <li class="entry">
+                  <a href={`/writing/${post.slug}`} class="entry-link">
+                    <span class="entry-title">{post.data.title}</span>
+                    <span class="entry-meta mono faint">{formatDate(post.data.date)}</span>
+                  </a>
+                  {post.data.description && (
+                    <p class="entry-desc faint">{post.data.description}</p>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))
+      ) : (
+        <p class="faint mono" style="font-size: 0.85rem; padding: 3rem 0;">— forthcoming —</p>
+      )}
+    </div>
+  </main>
+  <Footer />
+</Base>
+
+<style>
+  .page-header {
+    padding: clamp(2.5rem, 6vw, 5rem) 0 2rem;
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 0;
+  }
+
+  .page-header h1 {
+    font-size: clamp(2rem, 5vw, 3rem);
+    margin-bottom: 0.5rem;
+  }
+
+  .year-section { margin-top: 2.5rem; }
+
+  .year-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+  }
+
+  .entry-list { list-style: none; }
+
+  .entry {
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .entry:first-child { border-top: 1px solid var(--rule); }
+
+  .entry-link {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    text-decoration: none;
+  }
+
+  .entry-link:hover .entry-title { color: var(--accent); }
+
+  .entry-title {
+    font-family: var(--font-serif);
+    font-size: 1rem;
+    transition: color 0.15s;
+  }
+
+  .entry-meta { font-size: 0.75rem; flex-shrink: 0; }
+
+  .entry-desc {
+    font-size: 0.875rem;
+    margin-top: 0.35rem;
+    max-width: 60ch;
+  }
+</style>
